@@ -380,6 +380,7 @@ type SceneEdit struct {
 	Duration            *int64                      `json:"duration,omitempty"`
 	Director            *string                     `json:"director,omitempty"`
 	Code                *string                     `json:"code,omitempty"`
+	Label               *string                     `json:"code,omitempty"`
 	DraftID             *uuid.UUID                  `json:"draft_id,omitempty"`
 }
 

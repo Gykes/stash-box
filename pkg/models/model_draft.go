@@ -30,6 +30,7 @@ type SceneDraft struct {
 	ID           *uuid.UUID         `json:"id,omitempty"`
 	Title        *string            `json:"title,omitempty"`
 	Code         *string            `json:"code,omitempty"`
+	Label        *string            `json:"label,omitempty"`
 	Details      *string            `json:"details,omitempty"`
 	Director     *string            `json:"director,omitempty"`
 	URL          *string            `json:"url,omitempty"`

@@ -1311,6 +1311,7 @@ export type Scene = {
   fingerprints: Array<Fingerprint>;
   id: Scalars["ID"];
   images: Array<Image>;
+  label?: Maybe<Scalars["String"]>;
   performers: Array<PerformerAppearance>;
   release_date?: Maybe<Scalars["String"]>;
   studio?: Maybe<Studio>;
@@ -1332,6 +1333,7 @@ export type SceneCreateInput = {
   duration?: InputMaybe<Scalars["Int"]>;
   fingerprints: Array<FingerprintEditInput>;
   image_ids?: InputMaybe<Array<Scalars["ID"]>>;
+  label?: InputMaybe<Scalars["String"]>;
   performers?: InputMaybe<Array<PerformerAppearanceInput>>;
   studio_id?: InputMaybe<Scalars["ID"]>;
   tag_ids?: InputMaybe<Array<Scalars["ID"]>>;
@@ -1352,6 +1354,7 @@ export type SceneDraft = {
   fingerprints: Array<DraftFingerprint>;
   id?: Maybe<Scalars["ID"]>;
   image?: Maybe<Image>;
+  label?: Maybe<Scalars["String"]>;
   performers: Array<SceneDraftPerformer>;
   studio?: Maybe<SceneDraftStudio>;
   tags?: Maybe<Array<SceneDraftTag>>;
@@ -1367,6 +1370,7 @@ export type SceneDraftInput = {
   fingerprints: Array<FingerprintInput>;
   id?: InputMaybe<Scalars["ID"]>;
   image?: InputMaybe<Scalars["Upload"]>;
+  label?: InputMaybe<Scalars["String"]>;
   performers: Array<DraftEntityInput>;
   studio?: InputMaybe<DraftEntityInput>;
   tags?: InputMaybe<Array<DraftEntityInput>>;
@@ -1396,6 +1400,7 @@ export type SceneEdit = {
   duration?: Maybe<Scalars["Int"]>;
   fingerprints: Array<Fingerprint>;
   images: Array<Image>;
+  label?: Maybe<Scalars["String"]>;
   performers: Array<PerformerAppearance>;
   removed_fingerprints?: Maybe<Array<Fingerprint>>;
   removed_images?: Maybe<Array<Maybe<Image>>>;
@@ -1417,6 +1422,7 @@ export type SceneEditDetailsInput = {
   duration?: InputMaybe<Scalars["Int"]>;
   fingerprints?: InputMaybe<Array<FingerprintInput>>;
   image_ids?: InputMaybe<Array<Scalars["ID"]>>;
+  label?: InputMaybe<Scalars["String"]>;
   performers?: InputMaybe<Array<PerformerAppearanceInput>>;
   studio_id?: InputMaybe<Scalars["ID"]>;
   tag_ids?: InputMaybe<Array<Scalars["ID"]>>;
@@ -1478,6 +1484,7 @@ export type SceneUpdateInput = {
   fingerprints?: InputMaybe<Array<FingerprintEditInput>>;
   id: Scalars["ID"];
   image_ids?: InputMaybe<Array<Scalars["ID"]>>;
+  label?: InputMaybe<Scalars["String"]>;
   performers?: InputMaybe<Array<PerformerAppearanceInput>>;
   studio_id?: InputMaybe<Scalars["ID"]>;
   tag_ids?: InputMaybe<Array<Scalars["ID"]>>;
@@ -3121,6 +3128,7 @@ export type AddSceneMutation = {
     release_date?: string | null;
     title?: string | null;
     code?: string | null;
+    label?: string | null;
     details?: string | null;
     director?: string | null;
     urls: Array<{
@@ -13950,6 +13958,7 @@ export type DraftQuery = {
           id?: string | null;
           title?: string | null;
           code?: string | null;
+          label?: string | null;
           details?: string | null;
           director?: string | null;
           date?: string | null;
@@ -21107,6 +21116,7 @@ export const AddSceneDocument = {
                 },
                 { kind: "Field", name: { kind: "Name", value: "title" } },
                 { kind: "Field", name: { kind: "Name", value: "code" } },
+                { kind: "Field", name: { kind: "Name", value: "label" } },
                 { kind: "Field", name: { kind: "Name", value: "details" } },
                 { kind: "Field", name: { kind: "Name", value: "director" } },
                 {
@@ -39389,6 +39399,10 @@ export const DraftDocument = {
                             {
                               kind: "Field",
                               name: { kind: "Name", value: "code" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "label" },
                             },
                             {
                               kind: "Field",

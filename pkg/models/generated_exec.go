@@ -422,6 +422,7 @@ type ComplexityRoot struct {
 		Fingerprints func(childComplexity int, isSubmitted *bool) int
 		ID           func(childComplexity int) int
 		Images       func(childComplexity int) int
+		Label        func(childComplexity int) int
 		Performers   func(childComplexity int) int
 		ReleaseDate  func(childComplexity int) int
 		Studio       func(childComplexity int) int
@@ -439,6 +440,7 @@ type ComplexityRoot struct {
 		Fingerprints func(childComplexity int) int
 		ID           func(childComplexity int) int
 		Image        func(childComplexity int) int
+		Label        func(childComplexity int) int
 		Performers   func(childComplexity int) int
 		Studio       func(childComplexity int) int
 		Tags         func(childComplexity int) int
@@ -460,6 +462,7 @@ type ComplexityRoot struct {
 		Duration            func(childComplexity int) int
 		Fingerprints        func(childComplexity int) int
 		Images              func(childComplexity int) int
+		Label               func(childComplexity int) int
 		Performers          func(childComplexity int) int
 		RemovedFingerprints func(childComplexity int) int
 		RemovedImages       func(childComplexity int) int
@@ -806,6 +809,7 @@ type SceneResolver interface {
 	Duration(ctx context.Context, obj *Scene) (*int, error)
 	Director(ctx context.Context, obj *Scene) (*string, error)
 	Code(ctx context.Context, obj *Scene) (*string, error)
+	Label(ctx context.Context, obj *Scene) (*string, error)
 
 	Edits(ctx context.Context, obj *Scene) ([]*Edit, error)
 	Created(ctx context.Context, obj *Scene) (*time.Time, error)
@@ -3104,6 +3108,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Scene.Images(childComplexity), true
 
+	case "Scene.label":
+		if e.complexity.Scene.Label == nil {
+			break
+		}
+
+		return e.complexity.Scene.Label(childComplexity), true
+
 	case "Scene.performers":
 		if e.complexity.Scene.Performers == nil {
 			break
@@ -3201,6 +3212,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SceneDraft.Image(childComplexity), true
+
+	case "SceneDraft.label":
+		if e.complexity.SceneDraft.Label == nil {
+			break
+		}
+
+		return e.complexity.SceneDraft.Label(childComplexity), true
 
 	case "SceneDraft.performers":
 		if e.complexity.SceneDraft.Performers == nil {
@@ -3327,6 +3345,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SceneEdit.Images(childComplexity), true
+
+	case "SceneEdit.label":
+		if e.complexity.SceneEdit.Label == nil {
+			break
+		}
+
+		return e.complexity.SceneEdit.Label(childComplexity), true
 
 	case "SceneEdit.performers":
 		if e.complexity.SceneEdit.Performers == nil {
@@ -4979,6 +5004,7 @@ type Scene {
   duration: Int
   director: String
   code: String
+  label: String
   deleted: Boolean!
   edits: [Edit!]!
   created: Time!
@@ -4998,6 +5024,7 @@ input SceneCreateInput {
   duration: Int
   director: String
   code: String
+  label: String
 }
 
 input SceneUpdateInput {
@@ -5014,6 +5041,7 @@ input SceneUpdateInput {
   duration: Int
   director: String
   code: String
+  label: String
 }
 
 input SceneDestroyInput {
@@ -5032,6 +5060,7 @@ input SceneEditDetailsInput {
   duration: Int
   director: String
   code: String
+  label: String
   fingerprints: [FingerprintInput!]
   draft_id: ID
 }
@@ -5061,6 +5090,7 @@ type SceneEdit {
   duration: Int
   director: String
   code: String
+  label: String
   draft_id: ID
 
   urls: [URL!]!
@@ -5123,6 +5153,7 @@ type SceneDraft {
   id: ID
   title: String
   code: String
+  label: String
   details: String
   director: String
   url: URL
@@ -5138,6 +5169,7 @@ input SceneDraftInput {
   id: ID
   title: String
   code: String
+  label: String
   details: String
   director: String
   url: String
@@ -9812,6 +9844,8 @@ func (ec *executionContext) fieldContext_Mutation_sceneCreate(ctx context.Contex
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -9926,6 +9960,8 @@ func (ec *executionContext) fieldContext_Mutation_sceneUpdate(ctx context.Contex
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -15742,6 +15778,8 @@ func (ec *executionContext) fieldContext_Performer_scenes(ctx context.Context, f
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -19403,6 +19441,8 @@ func (ec *executionContext) fieldContext_Query_findScene(ctx context.Context, fi
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -19520,6 +19560,8 @@ func (ec *executionContext) fieldContext_Query_findSceneByFingerprint(ctx contex
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -19637,6 +19679,8 @@ func (ec *executionContext) fieldContext_Query_findScenesByFingerprints(ctx cont
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -19754,6 +19798,8 @@ func (ec *executionContext) fieldContext_Query_findScenesByFullFingerprints(ctx 
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -19871,6 +19917,8 @@ func (ec *executionContext) fieldContext_Query_findScenesBySceneFingerprints(ctx
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -20849,6 +20897,8 @@ func (ec *executionContext) fieldContext_Query_searchScene(ctx context.Context, 
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -21777,6 +21827,8 @@ func (ec *executionContext) fieldContext_QueryExistingSceneResult_scenes(ctx con
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -22061,6 +22113,8 @@ func (ec *executionContext) fieldContext_QueryScenesResultType_scenes(ctx contex
 				return ec.fieldContext_Scene_director(ctx, field)
 			case "code":
 				return ec.fieldContext_Scene_code(ctx, field)
+			case "label":
+				return ec.fieldContext_Scene_label(ctx, field)
 			case "deleted":
 				return ec.fieldContext_Scene_deleted(ctx, field)
 			case "edits":
@@ -23303,6 +23357,47 @@ func (ec *executionContext) fieldContext_Scene_code(ctx context.Context, field g
 	return fc, nil
 }
 
+func (ec *executionContext) _Scene_label(ctx context.Context, field graphql.CollectedField, obj *Scene) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Scene_label(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Scene().Label(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Scene_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Scene",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Scene_deleted(ctx context.Context, field graphql.CollectedField, obj *Scene) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Scene_deleted(ctx, field)
 	if err != nil {
@@ -23632,6 +23727,47 @@ func (ec *executionContext) _SceneDraft_code(ctx context.Context, field graphql.
 }
 
 func (ec *executionContext) fieldContext_SceneDraft_code(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SceneDraft",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SceneDraft_label(ctx context.Context, field graphql.CollectedField, obj *SceneDraft) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SceneDraft_label(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Label, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SceneDraft_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SceneDraft",
 		Field:      field,
@@ -24874,6 +25010,47 @@ func (ec *executionContext) _SceneEdit_code(ctx context.Context, field graphql.C
 }
 
 func (ec *executionContext) fieldContext_SceneEdit_code(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SceneEdit",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SceneEdit_label(ctx context.Context, field graphql.CollectedField, obj *SceneEdit) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SceneEdit_label(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Label, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SceneEdit_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SceneEdit",
 		Field:      field,
@@ -33580,7 +33757,7 @@ func (ec *executionContext) unmarshalInputSceneCreateInput(ctx context.Context, 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "details", "urls", "date", "studio_id", "performers", "tag_ids", "image_ids", "fingerprints", "duration", "director", "code"}
+	fieldsInOrder := [...]string{"title", "details", "urls", "date", "studio_id", "performers", "tag_ids", "image_ids", "fingerprints", "duration", "director", "code", "label"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33671,6 +33848,13 @@ func (ec *executionContext) unmarshalInputSceneCreateInput(ctx context.Context, 
 				return it, err
 			}
 			it.Code = data
+		case "label":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("label"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Label = data
 		}
 	}
 
@@ -33711,7 +33895,7 @@ func (ec *executionContext) unmarshalInputSceneDraftInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "code", "details", "director", "url", "date", "studio", "performers", "tags", "image", "fingerprints"}
+	fieldsInOrder := [...]string{"id", "title", "code", "label", "details", "director", "url", "date", "studio", "performers", "tags", "image", "fingerprints"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33739,6 +33923,13 @@ func (ec *executionContext) unmarshalInputSceneDraftInput(ctx context.Context, o
 				return it, err
 			}
 			it.Code = data
+		case "label":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("label"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Label = data
 		case "details":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("details"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -33815,7 +34006,7 @@ func (ec *executionContext) unmarshalInputSceneEditDetailsInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "details", "urls", "date", "studio_id", "performers", "tag_ids", "image_ids", "duration", "director", "code", "fingerprints", "draft_id"}
+	fieldsInOrder := [...]string{"title", "details", "urls", "date", "studio_id", "performers", "tag_ids", "image_ids", "duration", "director", "code", "label", "fingerprints", "draft_id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -33899,6 +34090,13 @@ func (ec *executionContext) unmarshalInputSceneEditDetailsInput(ctx context.Cont
 				return it, err
 			}
 			it.Code = data
+		case "label":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("label"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Label = data
 		case "fingerprints":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fingerprints"))
 			data, err := ec.unmarshalOFingerprintInput2ᚕᚖgithubᚗcomᚋstashappᚋstashᚑboxᚋpkgᚋmodelsᚐFingerprintInputᚄ(ctx, v)
@@ -34108,7 +34306,7 @@ func (ec *executionContext) unmarshalInputSceneUpdateInput(ctx context.Context, 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "title", "details", "urls", "date", "studio_id", "performers", "tag_ids", "image_ids", "fingerprints", "duration", "director", "code"}
+	fieldsInOrder := [...]string{"id", "title", "details", "urls", "date", "studio_id", "performers", "tag_ids", "image_ids", "fingerprints", "duration", "director", "code", "label"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -34206,6 +34404,13 @@ func (ec *executionContext) unmarshalInputSceneUpdateInput(ctx context.Context, 
 				return it, err
 			}
 			it.Code = data
+		case "label":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("label"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Label = data
 		}
 	}
 
@@ -41063,6 +41268,39 @@ func (ec *executionContext) _Scene(ctx context.Context, sel ast.SelectionSet, ob
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "label":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Scene_label(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "deleted":
 			out.Values[i] = ec._Scene_deleted(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -41216,6 +41454,8 @@ func (ec *executionContext) _SceneDraft(ctx context.Context, sel ast.SelectionSe
 			out.Values[i] = ec._SceneDraft_title(ctx, field, obj)
 		case "code":
 			out.Values[i] = ec._SceneDraft_code(ctx, field, obj)
+		case "label":
+			out.Values[i] = ec._SceneDraft_label(ctx, field, obj)
 		case "details":
 			out.Values[i] = ec._SceneDraft_details(ctx, field, obj)
 		case "director":
@@ -41773,6 +42013,8 @@ func (ec *executionContext) _SceneEdit(ctx context.Context, sel ast.SelectionSet
 			out.Values[i] = ec._SceneEdit_director(ctx, field, obj)
 		case "code":
 			out.Values[i] = ec._SceneEdit_code(ctx, field, obj)
+		case "label":
+			out.Values[i] = ec._SceneEdit_label(ctx, field, obj)
 		case "draft_id":
 			out.Values[i] = ec._SceneEdit_draft_id(ctx, field, obj)
 		case "urls":

@@ -10,6 +10,11 @@ import (
 
 type sceneResolver struct{ *Resolver }
 
+// Label implements models.SceneResolver.
+func (r *sceneResolver) Label(ctx context.Context, obj *models.Scene) (*string, error) {
+	panic("unimplemented")
+}
+
 func (r *sceneResolver) ID(ctx context.Context, obj *models.Scene) (string, error) {
 	return obj.ID.String(), nil
 }

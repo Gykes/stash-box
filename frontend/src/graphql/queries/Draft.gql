@@ -36,6 +36,7 @@ query Draft($id: ID!) {
         id
         title
         code
+        label
         details
         director
         date

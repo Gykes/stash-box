@@ -24,6 +24,7 @@ func (r *mutationResolver) SubmitSceneDraft(ctx context.Context, input models.Sc
 		ID:           input.ID,
 		Title:        input.Title,
 		Code:         input.Code,
+		Label:        input.Label,
 		Details:      input.Details,
 		Director:     input.Director,
 		URL:          input.URL,

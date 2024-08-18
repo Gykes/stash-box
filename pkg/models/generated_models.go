@@ -492,6 +492,7 @@ type SceneCreateInput struct {
 	Duration     *int                        `json:"duration,omitempty"`
 	Director     *string                     `json:"director,omitempty"`
 	Code         *string                     `json:"code,omitempty"`
+	Label        *string                     `json:"label,omitempty"`
 }
 
 type SceneDestroyInput struct {
@@ -502,6 +503,7 @@ type SceneDraftInput struct {
 	ID           *uuid.UUID          `json:"id,omitempty"`
 	Title        *string             `json:"title,omitempty"`
 	Code         *string             `json:"code,omitempty"`
+	Label        *string             `json:"label,omitempty"`
 	Details      *string             `json:"details,omitempty"`
 	Director     *string             `json:"director,omitempty"`
 	URL          *string             `json:"url,omitempty"`
@@ -525,6 +527,7 @@ type SceneEditDetailsInput struct {
 	Duration     *int                        `json:"duration,omitempty"`
 	Director     *string                     `json:"director,omitempty"`
 	Code         *string                     `json:"code,omitempty"`
+	Label        *string                     `json:"label,omitempty"`
 	Fingerprints []*FingerprintInput         `json:"fingerprints,omitempty"`
 	DraftID      *uuid.UUID                  `json:"draft_id,omitempty"`
 }
@@ -580,6 +583,7 @@ type SceneUpdateInput struct {
 	Duration     *int                        `json:"duration,omitempty"`
 	Director     *string                     `json:"director,omitempty"`
 	Code         *string                     `json:"code,omitempty"`
+	Label        *string                     `json:"label,omitempty"`
 }
 
 type SiteCreateInput struct {

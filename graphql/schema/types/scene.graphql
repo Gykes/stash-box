@@ -82,6 +82,7 @@ type Scene {
   duration: Int
   director: String
   code: String
+  label: String
   deleted: Boolean!
   edits: [Edit!]!
   created: Time!
@@ -101,6 +102,7 @@ input SceneCreateInput {
   duration: Int
   director: String
   code: String
+  label: String
 }
 
 input SceneUpdateInput {
@@ -117,6 +119,7 @@ input SceneUpdateInput {
   duration: Int
   director: String
   code: String
+  label: String
 }
 
 input SceneDestroyInput {
@@ -135,6 +138,7 @@ input SceneEditDetailsInput {
   duration: Int
   director: String
   code: String
+  label: String
   fingerprints: [FingerprintInput!]
   draft_id: ID
 }
@@ -164,6 +168,7 @@ type SceneEdit {
   duration: Int
   director: String
   code: String
+  label: String
   draft_id: ID
 
   urls: [URL!]!
@@ -226,6 +231,7 @@ type SceneDraft {
   id: ID
   title: String
   code: String
+  label: String
   details: String
   director: String
   url: URL
@@ -241,6 +247,7 @@ input SceneDraftInput {
   id: ID
   title: String
   code: String
+  label: String
   details: String
   director: String
   url: String
